@@ -1,4 +1,5 @@
 #include <stdio.h>
+#define MAX 100
 
 struct Aluno {
     float n_teorica;
@@ -6,7 +7,7 @@ struct Aluno {
     int aulas_assistidas;
 };
 
-int menu () {
+int menu () { // funcao que retorna o menu pedindo a opcao
     int opcao;
 
     // funcao que mostra o menu
@@ -24,11 +25,11 @@ int main () {
     float maior_nota_pratica = 0, menor_nota_pratica = 11; 
     float maior_nota_teorica = 0, menor_nota_teorica = 11; 
 
-    struct Aluno alunos[100];
+    struct Aluno alunos[MAX];
 
     // tema, boas-vindas e integrantes do grupo
     printf("\n--- Sistema de Diagnostico de Turmas EPT ---\n");
-    printf("Integrantes: Evangelista, Jailson, Julia, Mateus\n");
+    printf("Integrantes: Evangelista, Jailson, Julia, Mateus, Jociano e Guilherme\n");
     printf("Seja bem-vindo ao Sistema de Diagnostico de Turmas EPT!\n");
     opcao = menu();
 
@@ -48,11 +49,18 @@ int main () {
                     printf("Digite a nota de conhecimentos teoricos do aluno %d: ", i);
                     scanf("\n%f", numero1);
 
+                    while (numero1 < 0.0 || numero1 > 10.0) {
+
+                        printf("Opcao invalida! Digite novamente.\n");
+                        scanf("%f", numero1);
+                    }
+
                     if (numero1 >= 0.0 && numero1 <= 10.0) {
                         alunos[i].n_teorica = numero1;
                     }
                     else {
                         printf("Numero invalido!\n");
+                        printf("Digite novamente o numero: \n");
                     }
                     
                     // se nota digitada for maior que a guardada, o valor de nota eh a nova maior nota
