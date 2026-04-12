@@ -42,10 +42,18 @@ int main () {
                 scanf("\n%d", &qtd_aluno);
 
                 for (int i = 1; i <= qtd_aluno; i++) {
+                    float numero1, numero2;
 
                     // pedido das infos de acordo com a quantidade de alunos
                     printf("Digite a nota de conhecimentos teoricos do aluno %d: ", i);
-                    scanf("\n%f", &alunos[i].n_teorica);
+                    scanf("\n%f", numero1);
+
+                    if (numero1 >= 0.0 && numero1 <= 10.0) {
+                        alunos[i].n_teorica = numero1;
+                    }
+                    else {
+                        printf("Numero invalido!\n");
+                    }
                     
                     // se nota digitada for maior que a guardada, o valor de nota eh a nova maior nota
                     if (alunos[i].n_teorica > maior_nota_teorica) {
@@ -74,8 +82,6 @@ int main () {
                     scanf("\n%d", &alunos[i].aulas_assistidas);
                 }
                 
-                printf("%f\n", maior_nota_pratica);
-                printf("%f\n", menor_nota_pratica);
                 opcao = menu();
 
         }
