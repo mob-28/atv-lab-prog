@@ -1,236 +1,261 @@
 #include <stdio.h>
+#include <string.h>
 #define MAX 100
-
+ 
 struct Aluno {
     float n_teorica;
     float n_pratica;
     int aulas_assistidas;
 };
-
-int menu () { // funcao que retorna o menu pedindo a opcao
+ 
+int menu() {
     int opcao;
-
-    // funcao que mostra o menu
-    printf("\n--- MENU ---\n1 - Adicionar Notas\n2 - Visualizar Diagnostico\n3 - Registrar Evasao\n4 - Encerrar programa\n");
-
+ 
+    printf("\n--- MENU ---\n");
+    printf("1 - Adicionar Notas\n");
+    printf("2 - Visualizar Diagnostico\n");
+    printf("3 - Registrar Evasao\n");
+    printf("4 - Encerrar programa\n");
     printf("Digite uma opcao: ");
     scanf("%d", &opcao);
-
+ 
+    // valida opcao do menu
+    while (opcao < 1 || opcao > 4) {
+        printf("Opcao invalida! Digite novamente: ");
+        scanf("%d", &opcao);
+    }
+ 
     return opcao;
 }
-
-int main () {
-
+ 
+int main() {
+ 
     int opcao;
     int qtd_aluno = 0;
-
+ 
     float maior_nota_pratica = 0, menor_nota_pratica = 11;
     float maior_nota_teorica = 0, menor_nota_teorica = 11;
-
-    int evasao = 0;
-    char motivo[100];
-
+ 
+    // indices para identificar qual aluno tem maior/menor nota
+    int idx_maior_teorica = 0, idx_menor_teorica = 0;
+    int idx_maior_pratica = 0, idx_menor_pratica = 0;
+ 
     struct Aluno alunos[MAX];
-
-    // tema, boas-vindas e integrantes do grupo
+ 
+    // variaveis para acumular evasoes
+    int qtd_evasoes = 0;
+    int total_min_evasao = 0;
+    char motivos[MAX][100];
+ 
     printf("\n--- Sistema de Diagnostico de Turmas EPT ---\n");
     printf("Integrantes: Evangelista, Jailson, Julia, Mateus, Jociano e Guilherme\n");
     printf("Seja bem-vindo ao Sistema de Diagnostico de Turmas EPT!\n");
-
+ 
     opcao = menu();
-
-    // Validação da opcao
-    while (opcao < 1 || opcao > 4) {
-        printf("Opcao invalida, digite novamente: ");
-        opcao = menu();
-    }
-
+ 
     do {
-
+ 
         switch (opcao) {
-
+ 
         case 1:
-            // caso da opcao 1, onde adiciona as notas
             printf("Digite a quantidade de alunos: ");
             scanf("%d", &qtd_aluno);
-            
-            // repete a solicitacao de notas de acordo com a quantidade de alunos
+ 
+            // valida quantidade de alunos
+            while (qtd_aluno <= 0 || qtd_aluno > MAX) {
+                printf("Quantidade invalida! Digite um valor entre 1 e %d: ", MAX);
+                scanf("%d", &qtd_aluno);
+            }
+ 
             for (int i = 0; i < qtd_aluno; i++) {
-
+ 
+                // --- Nota teorica ---
                 float numero1;
-                // solicita a nota teorica
-                printf("Digite a nota de conhecimentos teoricos do aluno %d: ", i+1);
+                printf("Digite a nota de conhecimentos teoricos do aluno %d: ", i + 1);
                 scanf("%f", &numero1);
-                // verifica se a nota esta entre 0 e 10
+ 
                 while (numero1 < 0.0 || numero1 > 10.0) {
-                
-                    printf("Opcao invalida! Digite novamente.\n");
+                    printf("Nota invalida! Digite um valor entre 0.0 e 10.0: ");
                     scanf("%f", &numero1);
                 }
-                
-                if (numero1 >= 0.0 && numero1 <= 10.0) {
-                    alunos[i].n_teorica = numero1;
-                }
-                else {
-                    printf("Numero invalido!\n");
-                    printf("Digite novamente o numero: \n");
-                }
-                // verifica se a nota eh maior que a ja armazenada
+ 
+                alunos[i].n_teorica = numero1;
+ 
                 if (alunos[i].n_teorica > maior_nota_teorica) {
                     maior_nota_teorica = alunos[i].n_teorica;
+                    idx_maior_teorica = i; // guarda o indice do aluno
                 }
-                // verifica se a nota eh menor que a ja armazenada
                 if (alunos[i].n_teorica < menor_nota_teorica) {
                     menor_nota_teorica = alunos[i].n_teorica;
+                    idx_menor_teorica = i; // guarda o indice do aluno
                 }
-                // solicita a nota de atividades praticas do aluno
-                printf("Digite a nota de habilidades praticas do aluno %d: ", i+1);
+ 
+                // --- Nota pratica ---
+                printf("Digite a nota de habilidades praticas do aluno %d: ", i + 1);
                 scanf("%f", &alunos[i].n_pratica);
-                // verifica se esta dentro de 0 e 10
+ 
                 while (alunos[i].n_pratica < 0.0 || alunos[i].n_pratica > 10.0) {
-
-                    printf("Opcao invalida! Digite novamente.\n");
+                    printf("Nota invalida! Digite um valor entre 0.0 e 10.0: ");
                     scanf("%f", &alunos[i].n_pratica);
                 }
-                // verifica e armazena se a nota guardada eh maior que esta armazenada no programa
+ 
                 if (alunos[i].n_pratica > maior_nota_pratica) {
                     maior_nota_pratica = alunos[i].n_pratica;
+                    idx_maior_pratica = i; // guarda o indice do aluno
                 }
-                // verifica e armazena se a nota guardada eh menor que esta armazenada no programa
                 if (alunos[i].n_pratica < menor_nota_pratica) {
                     menor_nota_pratica = alunos[i].n_pratica;
+                    idx_menor_pratica = i; // guarda o indice do aluno
                 }
-                // solicita a quantidade de horas assistidas
-                printf("Digite a quantidade de aulas assistidas do aluno %d: ", i+1);
+ 
+                // --- Aulas assistidas ---
+                printf("Digite a quantidade de aulas assistidas do aluno %d: ", i + 1);
                 scanf("%d", &alunos[i].aulas_assistidas);
-            }
-
-            opcao = menu();
-
-            // Validaçao da opcao
-            while (opcao < 1 || opcao > 4) {
-                printf("Opcao invalida, digite novamente: ");
-                opcao = menu();
-            }
-
-            break;
-
-        case 2:
-            // faz o diagnostico da turma
-
-            // se tiver nenhum aluno
-            if (qtd_aluno == 0) {
-                printf("Nenhum aluno cadastrado\n");
-                opcao = menu();
-
-                // Validaçao da opcao
-                while (opcao < 1 || opcao > 4) {
-                    printf("Opcao invalida, digite novamente: ");
-                    opcao = menu();
+ 
+                // valida aulas assistidas (nao pode ser negativo)
+                while (alunos[i].aulas_assistidas < 0) {
+                    printf("Valor invalido! Digite um numero positivo: ");
+                    scanf("%d", &alunos[i].aulas_assistidas);
                 }
-
+            }
+ 
+            opcao = menu();
+            break;
+ 
+        case 2:
+            if (qtd_aluno == 0) {
+                printf("Nenhum aluno cadastrado!\n");
+                opcao = menu();
                 break;
             }
-
+ 
             float soma = 0;
             int totalAulas = 0;
-
-            // faz a media das horas assistidas
+ 
             for (int i = 0; i < qtd_aluno; i++) {
-
-                float media = (alunos[i].n_teorica + alunos[i].n_pratica) / 2;
-
-                soma += media;
+ 
+                float media_individual = (alunos[i].n_teorica + alunos[i].n_pratica) / 2;
+ 
+                soma += media_individual;
                 totalAulas += alunos[i].aulas_assistidas;
+ 
+                // verifica media individual de cada aluno
+                printf("\nAluno %d | Teorica: %.2f | Pratica: %.2f | Media: %.2f",
+                       i + 1,
+                       alunos[i].n_teorica,
+                       alunos[i].n_pratica,
+                       media_individual);
+ 
+                if (media_individual >= 7.0)
+                    printf(" -> Aluno aprovado");
+                else
+                    printf(" -> Aluno com dificuldades");
             }
-
+ 
             float mediaTurma = soma / qtd_aluno;
-
+ 
             int minutos = totalAulas * 45;
             int horas = minutos / 60;
-
-            printf("\n--- DIAGNOSTICO ---\n");
+ 
+            printf("\n\n--- DIAGNOSTICO DA TURMA ---\n");
             printf("Quantidade de alunos: %d\n", qtd_aluno);
             printf("Media da turma: %.2f\n", mediaTurma);
-            // printa os valores de maior e menor noa de cada disciplina
-
-            printf("Maior nota teorica: %.2f\n", maior_nota_teorica);
-            printf("Menor nota teorica: %.2f\n", menor_nota_teorica);
-            printf("Maior nota pratica: %.2f\n", maior_nota_pratica);
-            printf("Menor nota pratica: %.2f\n", menor_nota_pratica);
-
-            printf("Total de horas: %d\n", horas);
-
-            // Alunos em evasao e seus motivos
-            printf("Total de evasao: %d\n", evasao);
-            printf("Motivo das evasoes: %s\n", motivo);
-
-            // se estiver menor que 20 horas, retorna turma com defasagem
+ 
+            printf("\nNotas Teoricas:\n");
+            printf("  Maior nota: %.2f (Aluno %d)\n", maior_nota_teorica, idx_maior_teorica + 1);
+            printf("  Menor nota: %.2f (Aluno %d)\n", menor_nota_teorica, idx_menor_teorica + 1);
+ 
+            printf("\nNotas Praticas:\n");
+            printf("  Maior nota: %.2f (Aluno %d)\n", maior_nota_pratica, idx_maior_pratica + 1);
+            printf("  Menor nota: %.2f (Aluno %d)\n", menor_nota_pratica, idx_menor_pratica + 1);
+ 
+            // Conversao int -> double para exibir horas com precisao
+            double horasDouble = (double)minutos / 60.0;
+            printf("\nTotal de aulas: %d (%.2f horas)\n", totalAulas, horasDouble);
+ 
             if (horas < 20)
-                printf("Turma com defasagem\n");
-
-            // avalia a media da turma 
-            if (mediaTurma >= 7)
-                printf("Turma destaque\n");
+                printf("Status de frequencia: Turma com defasagem\n");
             else
-                printf("Turma com problemas\n");
-
-            opcao = menu();
-
-            // Validaçao da opcao
-            while (opcao < 1 || opcao > 4) {
-                printf("Opcao invalida, digite novamente: ");
-                opcao = menu();
+                printf("Status de frequencia: Frequencia adequada\n");
+ 
+            if (mediaTurma >= 7.0)
+                printf("Status de desempenho: Turma destaque\n");
+            else
+                printf("Status de desempenho: Turma com problemas\n");
+ 
+            // exibe registros de evasao acumulados
+            printf("\n--- EVASOES REGISTRADAS ---\n");
+            if (qtd_evasoes == 0) {
+                printf("Nenhuma evasao registrada.\n");
+            } else {
+                printf("Total de evasoes: %d\n", qtd_evasoes);
+                for (int i = 0; i < qtd_evasoes; i++) {
+                    printf("  Evasao %d: %s\n", i + 1, motivos[i]);
+                }
+                double totalHorasEvasao = (double)total_min_evasao / 60.0;
+                printf("Tempo total de ausencias: %d minutos (%.2f horas)\n",
+                       total_min_evasao, totalHorasEvasao);
             }
-
+ 
+            opcao = menu();
             break;
-
+ 
         case 3: {
-
-            // faz o diagnostico de evasao e solicita o motivo 
-            int dias, horas, minutos;
+ 
+            int dias, horas_ev, minutos_ev;
             int totalMin = 0;
-
+            char motivo[100];
+ 
             printf("Motivo da evasao: ");
             scanf(" %[^\n]", motivo);
-
-            printf("Digite dias, horas e minutos: ");
-            scanf("%d %d %d", &dias, &horas, &minutos);
-
-            while (dias > 0) {
+ 
+            printf("Digite dias, horas e minutos da ausencia: ");
+            scanf("%d %d %d", &dias, &horas_ev, &minutos_ev);
+ 
+            // valida entradas negativas
+            while (dias < 0 || horas_ev < 0 || minutos_ev < 0) {
+                printf("Valores invalidos! Nao pode ser negativo. Digite novamente (dias horas minutos): ");
+                scanf("%d %d %d", &dias, &horas_ev, &minutos_ev);
+            }
+ 
+            // Conversao usando laco while conforme exigido pelo projeto
+            int diasTemp = dias;
+            while (diasTemp > 0) {
                 totalMin += 24 * 60;
-                dias--;
+                diasTemp--;
             }
-
-            while (horas > 0) {
+ 
+            int horasTemp = horas_ev;
+            while (horasTemp > 0) {
                 totalMin += 60;
-                horas--;
+                horasTemp--;
             }
-
-            totalMin += minutos;
-            evasao ++;
-
-            printf("Tempo total em minutos: %d\n", totalMin);
-
+ 
+            totalMin += minutos_ev;
+ 
+            // Conversao int -> double e double -> int conforme requisito
+            double totalMinDouble = (double)totalMin;
+            int totalMinInt = (int)totalMinDouble;
+ 
+            // salva evasao para exibir no diagnostico
+            strncpy(motivos[qtd_evasoes], motivo, 99);
+            motivos[qtd_evasoes][99] = '\0';
+            total_min_evasao += totalMin;
+            qtd_evasoes++;
+ 
+            printf("\nEvasao registrada!\n");
+            printf("Motivo: %s\n", motivo);
+            printf("Tempo total de ausencia: %d minutos\n", totalMinInt);
+            printf("Equivalente a: %.2f horas\n", totalMinDouble / 60.0);
+ 
             opcao = menu();
-
-            // Validaçao da opcao
-            while (opcao < 1 || opcao > 4) {
-                printf("Opcao invalida, digite novamente: ");
-                opcao = menu();
-            }
-
             break;
         }
-
-        // se a opcao digitada for 4, o programa é fechado
-        case 4: {
-            printf("Programa finalizado!");
-            return 0;
+ 
         }
-
-        }
-        // Se a opcao digitada for diferente das exigidas
+ 
     } while (opcao != 4);
-
+ 
+    printf("\nPrograma finalizado.\n");
+    return 0;
 }
