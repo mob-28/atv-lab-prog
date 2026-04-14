@@ -27,6 +27,9 @@ int main () {
     float maior_nota_pratica = 0, menor_nota_pratica = 11;
     float maior_nota_teorica = 0, menor_nota_teorica = 11;
 
+    int evasao = 0;
+    char motivo[100];
+
     struct Aluno alunos[MAX];
 
     // tema, boas-vindas e integrantes do grupo
@@ -35,6 +38,12 @@ int main () {
     printf("Seja bem-vindo ao Sistema de Diagnostico de Turmas EPT!\n");
 
     opcao = menu();
+
+    // Validação da opcao
+    while (opcao < 1 || opcao > 4) {
+        printf("Opcao invalida, digite novamente: ");
+        opcao = menu();
+    }
 
     do {
 
@@ -97,6 +106,13 @@ int main () {
             }
 
             opcao = menu();
+
+            // Validaçao da opcao
+            while (opcao < 1 || opcao > 4) {
+                printf("Opcao invalida, digite novamente: ");
+                opcao = menu();
+            }
+
             break;
 
         case 2:
@@ -106,6 +122,13 @@ int main () {
             if (qtd_aluno == 0) {
                 printf("Nenhum aluno cadastrado\n");
                 opcao = menu();
+
+                // Validaçao da opcao
+                while (opcao < 1 || opcao > 4) {
+                    printf("Opcao invalida, digite novamente: ");
+                    opcao = menu();
+                }
+
                 break;
             }
 
@@ -137,7 +160,11 @@ int main () {
             printf("Menor nota pratica: %.2f\n", menor_nota_pratica);
 
             printf("Total de horas: %d\n", horas);
-            
+
+            // Alunos em evasao e seus motivos
+            printf("Total de evasao: %d\n", evasao);
+            printf("Motivo das evasoes: %s\n", motivo);
+
             // se estiver menor que 20 horas, retorna turma com defasagem
             if (horas < 20)
                 printf("Turma com defasagem\n");
@@ -149,6 +176,13 @@ int main () {
                 printf("Turma com problemas\n");
 
             opcao = menu();
+
+            // Validaçao da opcao
+            while (opcao < 1 || opcao > 4) {
+                printf("Opcao invalida, digite novamente: ");
+                opcao = menu();
+            }
+
             break;
 
         case 3: {
@@ -156,7 +190,6 @@ int main () {
             // faz o diagnostico de evasao e solicita o motivo 
             int dias, horas, minutos;
             int totalMin = 0;
-            char motivo[100];
 
             printf("Motivo da evasao: ");
             scanf(" %[^\n]", motivo);
@@ -175,17 +208,29 @@ int main () {
             }
 
             totalMin += minutos;
+            evasao ++;
 
             printf("Tempo total em minutos: %d\n", totalMin);
 
             opcao = menu();
+
+            // Validaçao da opcao
+            while (opcao < 1 || opcao > 4) {
+                printf("Opcao invalida, digite novamente: ");
+                opcao = menu();
+            }
+
             break;
         }
 
+        // se a opcao digitada for 4, o programa é fechado
+        case 4: {
+            printf("Programa finalizado!");
+            return 0;
         }
 
-    } while (opcao != 4); // se a opcao digitada for 4, o programa é fechado
+        }
+        // Se a opcao digitada for diferente das exigidas
+    } while (opcao != 4);
 
-    printf("Programa finalizado");
-    return 0;
 }
